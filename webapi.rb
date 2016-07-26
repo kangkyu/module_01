@@ -1,6 +1,5 @@
 require 'sinatra'
 require 'json'
-
 require 'gyoku'
 
 users = {
@@ -8,6 +7,11 @@ users = {
   'simon':    { first_name: 'Simon', last_name: 'Random', age: 26 },
   'john':     { first_name: 'John', last_name: 'Smith', age: 28 }
 }
+
+delete '/users/:first_name' do |first_name|
+  users.delete(first_name.to_sym)
+  status 204
+end
 
 get '/users' do
   send_data({
@@ -19,7 +23,7 @@ end
 helpers do
 
   def send_data(data)
-    case accepted_media_type
+    case media_type
     when 'json'
       content_type 'application/json'
       data[:json].call.to_json if data[:json]
@@ -29,15 +33,27 @@ helpers do
     end
   end
 
+  def media_type
+    @media_type ||= accepted_media_type
+  end
+
   def accepted_media_type
     return 'json' unless request.accept.any? # request.accept is an array of Sinatra::Request::AcceptEntry
 
-    request.accept.each do |mt|
-      return 'json' if %(application/json application/* */*).include?(mt.to_s)
-      return 'xml' if mt.to_s == 'application/xml'
+    request.accept.each do |type|
+      return 'json' if json_or_default?(type)
+      return 'xml' if xml?(type)
     end
 
     halt 406, "Not Acceptable"
+  end
+
+  def json_or_default?(type)
+    %(application/json application/* */*).include?(type.to_s)
+  end
+
+  def xml?(type)
+    type.to_s == 'application/xml'
   end
 
 end
