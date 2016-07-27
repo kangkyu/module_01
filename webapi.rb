@@ -11,6 +11,9 @@ users = {
 post '/users' do
   user = JSON.parse(request.body.read) # {"first_name"=>"Samuel", "last_name"=>"Da Costa", "age"=>19}
   users.merge! user["first_name"].downcase.to_sym => user
+
+  url = "http://localhost:4567/users/#{user["first_name"].downcase.to_sym}"
+  response.headers['Location'] = url
   status 201
 end
 
