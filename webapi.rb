@@ -8,6 +8,17 @@ users = {
   'john':     { first_name: 'John', last_name: 'Smith', age: 28 }
 }
 
+post '/users' do
+  user = JSON.parse(request.body.read) # {"first_name"=>"Samuel", "last_name"=>"Da Costa", "age"=>19}
+  users.merge! user["first_name"].downcase.to_sym => user
+  status 201
+end
+
+get '/users/:name' do |name|
+  send_data json: -> { users.fetch(name.to_sym).merge(id: name) },
+             xml: -> { {name => users.fetch(name.to_sym)} }
+end
+
 delete '/users/:first_name' do |first_name|
   users.delete(first_name.to_sym)
   status 204
