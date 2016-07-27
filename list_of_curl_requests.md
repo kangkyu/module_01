@@ -2,7 +2,6 @@ Here is a list of curl requests to ensure that everything is still working well.
 
 ```
 GET /users
-Output
 curl -i http://localhost:4567/users
 
 HTTP/1.1 200 OK
@@ -16,10 +15,10 @@ Server: thin
   {"first_name":"Simon","last_name":"Random","age":26,"id":"simon"},
   {"first_name":"John","last_name":"Smith","age":28,"id":"john"}
 ]
+```
 
-
+```
 POST /users
-Output
 curl -X POST -i http://localhost:4567/users \
      -H "Content-Type: application/json" \
      -d '{"first_name":"Samuel","last_name":"Da Costa","age":19}'
@@ -33,10 +32,10 @@ X-Content-Type-Options: nosniff
 X-Frame-Options: SAMEORIGIN
 Connection: keep-alive
 Server: thin
+```
 
-
+```
 PUT /users/jane
-Output
 curl -X PUT -i http://localhost:4567/users/jane \
      -H "Content-Type: application/json" \
      -d '{"first_name":"Jane","last_name":"Smith","age":25}'
@@ -52,7 +51,6 @@ Server: thin
 
 
 GET /users/jane
-Output
 curl -i http://localhost:4567/users/jane
 
 HTTP/1.1 200 OK
@@ -62,10 +60,10 @@ X-Content-Type-Options: nosniff
 Connection: keep-alive
 Server: thin
 {"first_name":"Jane","last_name":"Smith","age":25,"id":"jane"}
+```
 
-
+```
 PATCH /users/thibault
-Output
 curl -X PATCH -i http://localhost:4567/users/thibault \
      -H "Content-Type: application/json" \
      -d '{"age":26}'
@@ -77,18 +75,18 @@ X-Content-Type-Options: nosniff
 Connection: keep-alive
 Server: thin
 {"first_name":"Thibault","last_name":"Denizet","age":26,"id":"thibault"}
+```
 
-
+```
 DELETE /users/thibault
-Output
-curl -i http://localhost:4567/users
-Output
 curl -X DELETE -i http://localhost:4567/users/thibault
 
 HTTP/1.1 204 No Content
 X-Content-Type-Options: nosniff
 Connection: close
 Server: thin
+
+curl -i http://localhost:4567/users
 
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -102,10 +100,10 @@ Server: thin
   {"first_name":"Samuel","last_name":"Da Costa","age":19,"id":"samuel"},
   {"first_name":"Jane","last_name":"Smith","age":25,"id":"jane"}
 ]
+```
 
-
+```
 OPTIONS /users
-Output
 curl -i -X OPTIONS http://localhost:4567/users
 
 HTTP/1.1 200 OK

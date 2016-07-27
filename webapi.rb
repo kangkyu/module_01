@@ -28,6 +28,15 @@ delete '/users/:first_name' do |first_name|
   status 204
 end
 
+options '/users/:name' do |name|
+  response.headers['Allow'] = "GET,DELETE"
+end
+
+options '/users' do
+  response.headers['Allow'] = 'HEAD,GET,POST'
+  status 200
+end
+
 head '/users' do
   send_data {}
 end
