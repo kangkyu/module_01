@@ -10,6 +10,7 @@ Content-Length: 273
 X-Content-Type-Options: nosniff
 Connection: keep-alive
 Server: thin
+
 [
   {"first_name":"Thibault","last_name":"Denizet","age":25,"id":"thibault"},
   {"first_name":"Simon","last_name":"Random","age":26,"id":"simon"},
@@ -59,6 +60,7 @@ Content-Length: 62
 X-Content-Type-Options: nosniff
 Connection: keep-alive
 Server: thin
+
 {"first_name":"Jane","last_name":"Smith","age":25,"id":"jane"}
 ```
 
@@ -74,6 +76,7 @@ Content-Length: 72
 X-Content-Type-Options: nosniff
 Connection: keep-alive
 Server: thin
+
 {"first_name":"Thibault","last_name":"Denizet","age":26,"id":"thibault"}
 ```
 
@@ -94,6 +97,7 @@ Content-Length: 263
 X-Content-Type-Options: nosniff
 Connection: keep-alive
 Server: thin
+
 [
   {"first_name":"Simon","last_name":"Random","age":26,"id":"simon"},
   {"first_name":"John","last_name":"Smith","age":28,"id":"john"},

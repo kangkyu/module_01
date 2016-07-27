@@ -8,6 +8,25 @@ users = {
   'john':     { first_name: 'John', last_name: 'Smith', age: 28 }
 }
 
+
+patch '/users/:name' do |name|
+  user = JSON.parse(request.body.read)
+  existing = users[name.to_sym]
+  user.each do |key, value|
+    existing[key.to_sym] = value
+  end
+  send_data \
+    json: -> { existing.merge(id: name) },
+    xml:  -> { {name => existing} }
+end
+
+put '/users/:name' do |name|
+  user = JSON.parse(request.body.read)
+  existing = users[name.to_sym]
+  users[name.to_sym] = user
+  status (existing ? 204 : 201)
+end
+
 post '/users' do
   user = JSON.parse(request.body.read) # {"first_name"=>"Samuel", "last_name"=>"Da Costa", "age"=>19}
   users.merge! user["first_name"].downcase.to_sym => user
@@ -29,7 +48,7 @@ delete '/users/:first_name' do |first_name|
 end
 
 options '/users/:name' do |name|
-  response.headers['Allow'] = "GET,DELETE"
+  response.headers['Allow'] = "GET,DELETE,PUT,PATCH"
 end
 
 options '/users' do
