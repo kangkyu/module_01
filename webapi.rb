@@ -18,8 +18,9 @@ post '/users' do
 end
 
 get '/users/:name' do |name|
-  send_data json: -> { users.fetch(name.to_sym).merge(id: name) },
-             xml: -> { {name => users.fetch(name.to_sym)} }
+  send_data \
+    json: -> { users.fetch(name.to_sym).merge(id: name) },
+    xml:  -> { {name => users.fetch(name.to_sym)} }
 end
 
 delete '/users/:first_name' do |first_name|
@@ -27,16 +28,19 @@ delete '/users/:first_name' do |first_name|
   status 204
 end
 
+head '/users' do
+  send_data {}
+end
+
 get '/users' do
-  send_data({
+  send_data \
     json: -> { users.map {|name, data| data.merge(id: name)} },
-    xml: -> { {users: users} }
-  })
+    xml:  -> { {users: users} }
 end
 
 helpers do
 
-  def send_data(data)
+  def send_data(data = {})
     case media_type
     when 'json'
       content_type 'application/json'
