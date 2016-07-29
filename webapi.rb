@@ -8,7 +8,6 @@ users = {
   'john':     { first_name: 'John', last_name: 'Smith', age: 28 }
 }
 
-
 patch '/users/:name' do |name|
   user = JSON.parse(request.body.read)
   existing = users[name.to_sym]
@@ -51,6 +50,18 @@ options '/users/:name' do |name|
   response.headers['Allow'] = "GET,DELETE,PUT,PATCH"
 end
 
+put '/users' do
+  halt 405
+end
+
+patch '/users' do
+  halt 405
+end
+
+delete '/users' do
+  halt 405
+end
+
 options '/users' do
   response.headers['Allow'] = 'HEAD,GET,POST'
   status 200
@@ -91,7 +102,8 @@ helpers do
       return 'xml' if xml?(type)
     end
 
-    halt 406, "Not Acceptable"
+    content_type 'text/plain'
+    halt 406, 'application/json, application/xml'
   end
 
   def json_or_default?(type)
@@ -101,7 +113,6 @@ helpers do
   def xml?(type)
     type.to_s == 'application/xml'
   end
-
 end
 
 get '/' do
