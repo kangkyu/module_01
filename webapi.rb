@@ -54,8 +54,8 @@ end
 
 get '/users/:name' do |name|
   send_data \
-    json: -> { users.fetch(name.to_sym).merge(id: name) },
-    xml:  -> { {name => users.fetch(name.to_sym)} }
+    json: -> { users[name.to_sym]&.merge(id: name) },
+    xml:  -> { {name => users[name.to_sym]} }
 end
 
 delete '/users/:first_name' do |first_name|
