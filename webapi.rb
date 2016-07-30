@@ -53,6 +53,8 @@ post '/users' do
 end
 
 get '/users/:name' do |name|
+  halt 404 unless users[name.to_sym]
+
   send_data \
     json: -> { users[name.to_sym]&.merge(id: name) },
     xml:  -> { {name => users[name.to_sym]} }
