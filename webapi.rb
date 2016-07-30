@@ -27,7 +27,15 @@ put '/users/:name' do |name|
 end
 
 post '/users' do
-  user = JSON.parse(request.body.read) # {"first_name"=>"Samuel", "last_name"=>"Da Costa", "age"=>19}
+  halt 415 unless request.env["CONTENT_TYPE"] == 'application/json'
+
+  begin
+    user = JSON.parse(request.body.read)
+  rescue JSON::ParserError => e
+    halt 400,
+      send_data( json: -> { {message: e.to_s} },
+                  xml: -> { {message: e.to_s} } )
+  end
   users.merge! user["first_name"].downcase.to_sym => user
 
   url = "http://localhost:4567/users/#{user["first_name"].downcase.to_sym}"
