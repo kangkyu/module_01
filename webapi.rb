@@ -32,13 +32,22 @@ post '/users' do
   begin
     user = JSON.parse(request.body.read)
   rescue JSON::ParserError => e
+    message = { message: e.to_s }
     halt 400,
-      send_data( json: -> { {message: e.to_s} },
-                  xml: -> { {message: e.to_s} } )
+      send_data( json: -> { message },
+                  xml: -> { message } )
   end
-  users.merge! user["first_name"].downcase.to_sym => user
 
-  url = "http://localhost:4567/users/#{user["first_name"].downcase.to_sym}"
+  id = user["first_name"].downcase.to_sym
+  if users[id]
+    message = { message: "User #{id} already in DB." }
+    halt 409,
+      send_data( json: -> { message },
+                  xml: -> { message } )
+  end
+
+  users.merge! id => user
+  url = "http://localhost:4567/users/#{id}"
   response.headers['Location'] = url
   status 201
 end
