@@ -23,7 +23,15 @@ patch '/users/:name' do |name|
 end
 
 put '/users/:name' do |name|
-  user = JSON.parse(request.body.read)
+  halt 415 unless request.env["CONTENT_TYPE"] == 'application/json'
+
+  begin
+    user = JSON.parse(request.body.read)
+  rescue JSON::ParserError => e
+    message = {message: e.to_s}
+    halt 400, send_data(json: ->{ message }, xml: ->{ message })
+  end
+
   existing = users[name.to_sym]
   users[name.to_sym] = user
   status (existing ? 204 : 201)
