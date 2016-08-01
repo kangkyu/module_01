@@ -12,7 +12,17 @@ deleted_users = {}
 
 # Routes
 patch '/users/:name' do |name|
-  user = JSON.parse(request.body.read)
+  halt 415 unless request.env["CONTENT_TYPE"] == 'application/json'
+
+  begin
+    user = JSON.parse(request.body.read)
+  rescue JSON::ParserError => e
+    message = {message: e.to_s}
+    halt 400, send_data(json: ->{ message }, xml: ->{ message })
+  end
+
+  halt 410 if deleted_users[name.to_sym]
+  halt 404 unless users[name.to_sym]
   existing = users[name.to_sym]
   user.each do |key, value|
     existing[key.to_sym] = value
