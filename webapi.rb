@@ -8,6 +8,9 @@ users = {
   'john':     { first_name: 'John', last_name: 'Smith', age: 28 }
 }
 
+deleted_users = {}
+
+# Routes
 patch '/users/:name' do |name|
   user = JSON.parse(request.body.read)
   existing = users[name.to_sym]
@@ -53,6 +56,7 @@ post '/users' do
 end
 
 get '/users/:name' do |name|
+  halt 410 if deleted_users[name.to_sym]
   halt 404 unless users[name.to_sym]
 
   send_data \
@@ -61,7 +65,9 @@ get '/users/:name' do |name|
 end
 
 delete '/users/:first_name' do |first_name|
-  users.delete(first_name.to_sym)
+  id = first_name.to_sym
+  deleted_users[id] = users[id] if users[id]
+  users.delete(id)
   status 204
 end
 
@@ -96,6 +102,7 @@ get '/users' do
     xml:  -> { {users: users} }
 end
 
+# Helpers
 helpers do
 
   def send_data(data = {})
